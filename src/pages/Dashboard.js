@@ -59,6 +59,8 @@ ChartJS.register(
   BarElement
 );
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const AnimatedNumber = ({ value }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
@@ -119,7 +121,7 @@ function Dashboard() {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/dashboard', {
+      const response = await fetch(`${API_URL}/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -259,13 +261,15 @@ function Dashboard() {
         />
         <CardItem
           title="Total Income"
-          value={summary?.income.toFixed(2)}
+          // تم تعديل هذا السطر
+          value={summary?.income && summary.income.toFixed(2)}
           icon={FaDollarSign}
           gradient="linear(to-r, green.500, green.700)"
         />
         <CardItem
           title="Total Expenses"
-          value={summary?.expenses.toFixed(2)}
+          // تم تعديل هذا السطر
+          value={summary?.expenses && summary.expenses.toFixed(2)}
           icon={FaArrowDown}
           gradient="linear(to-r, orange.500, orange.700)"
         />
@@ -323,7 +327,8 @@ function Dashboard() {
                             <Box flex="1">
                               <Text fontWeight="semibold" color="textPrimary">{activity.title}</Text>
                               <Text fontSize="sm" color="textSecondary">
-                                {activity.date} - ${activity.amount.toFixed(2)}
+                                {/* تم تعديل هذا السطر */}
+                                {activity.date} - ${activity.amount ? activity.amount.toFixed(2) : 'N/A'}
                               </Text>
                             </Box>
                           </HStack>

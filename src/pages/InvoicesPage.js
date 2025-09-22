@@ -39,6 +39,9 @@ import {
 } from 'react-icons/fa';
 import ReceiptModal from '../components/ReceiptModal';
 
+// تمت إضافة هذا السطر الجديد
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const InvoicesPage = () => {
   const [invoices, setInvoices] = useState([]);
   const [tenants, setTenants] = useState([]);
@@ -62,9 +65,9 @@ const InvoicesPage = () => {
     setIsLoading(true);
     try {
       const [invoicesRes, tenantsRes, propertiesRes] = await Promise.all([
-        fetch('http://localhost:5000/invoices', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/tenants', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/properties', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_URL}/invoices`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_URL}/tenants`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_URL}/properties`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       const [invoicesData, tenantsData, propertiesData] = await Promise.all([
@@ -131,8 +134,8 @@ const InvoicesPage = () => {
 
   const handleSubmit = async () => {
     const url = selectedInvoice
-      ? `http://localhost:5000/invoices/${selectedInvoice.id}`
-      : 'http://localhost:5000/invoices';
+      ? `${API_URL}/invoices/${selectedInvoice.id}`
+      : `${API_URL}/invoices`;
     const method = selectedInvoice ? 'PUT' : 'POST';
 
     try {
@@ -178,7 +181,7 @@ const InvoicesPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/invoices/${id}`, {
+      const response = await fetch(`${API_URL}/invoices/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -313,7 +316,6 @@ const InvoicesPage = () => {
         </Box>
       )}
 
-      {/* Existing Modal for Add/Edit Invoice */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -388,7 +390,6 @@ const InvoicesPage = () => {
         </ModalContent>
       </Modal>
 
-      {/* New Modal for Receipt */}
       <ReceiptModal
         isOpen={isReceiptModalOpen}
         onClose={onReceiptModalClose}
