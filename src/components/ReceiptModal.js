@@ -3,15 +3,13 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalBody,
   ModalFooter,
+  ModalCloseButton,
   Button,
   Box,
   Text,
   VStack,
   HStack,
-  Flex,
   Heading,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -127,7 +125,7 @@ const ReceiptModal = ({ isOpen, onClose, invoice }) => {
               </HStack>
               <HStack w="full" justifyContent="space-between">
                 <Text fontWeight="bold" color={textColor}>Date Paid:</Text>
-                <Text>{invoice.paid_date ? new Date(invoice.paid_date).toLocaleDateString() : 'N/A'}</Text>
+                <Text>{invoice.paid_date ? new Date(invoice.paid_date).toLocaleDate() : 'N/A'}</Text>
               </HStack>
             </VStack>
 

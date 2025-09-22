@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Heading,
@@ -43,15 +43,11 @@ function PropertiesPage() {
   const toast = useToast();
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
-
-  const showToast = (title, description, status) => {
+  const showToast = useCallback((title, description, status) => {
     toast({ title, description, status, duration: 5000, isClosable: true });
-  };
+  }, [toast]);
 
-  const fetchProperties = async () => {
+  const fetchProperties = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/properties', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -61,15 +57,18 @@ function PropertiesPage() {
     } catch (error) {
       showToast('Error', 'Failed to fetch properties.', 'error');
     }
-  };
+  }, [token, showToast]);
+
+  useEffect(() => {
+    fetchProperties();
+  }, [fetchProperties]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       const method = isEditing ? 'PUT' : 'POST';
       const url = isEditing ? `http://localhost:5000/properties/${currentId}` : 'http://localhost:5000/properties';
@@ -173,7 +172,7 @@ function PropertiesPage() {
           <ModalHeader>{isEditing ? 'Edit Property' : 'Add New Property'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack as="form" onSubmit={handleSubmit} spacing={4}>
+            <VStack as="form" spacing={4}>
               <FormControl isRequired>
                 <FormLabel>Property Name</FormLabel>
                 <Input name="name" value={formData.name} onChange={handleFormChange} placeholder="Enter name" />

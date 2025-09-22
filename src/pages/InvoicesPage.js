@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Heading,
@@ -35,9 +35,9 @@ import {
   FaPlus,
   FaEdit,
   FaTrash,
-  FaFilePdf, // تم إضافة هذا الرمز
+  FaFilePdf,
 } from 'react-icons/fa';
-import ReceiptModal from '../components/ReceiptModal'; // تم استيراد المكون الجديد
+import ReceiptModal from '../components/ReceiptModal';
 
 const InvoicesPage = () => {
   const [invoices, setInvoices] = useState([]);
@@ -58,7 +58,7 @@ const InvoicesPage = () => {
     paid_date: '',
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       const [invoicesRes, tenantsRes, propertiesRes] = await Promise.all([
@@ -73,7 +73,6 @@ const InvoicesPage = () => {
         propertiesRes.json(),
       ]);
 
-      // Enrich invoices with tenant and property names
       const enrichedInvoices = invoicesData.map(invoice => {
         const tenant = tenantsData.find(t => t.id === invoice.tenant_id);
         const property = propertiesData.find(p => p.id === tenant?.property_id);
@@ -98,11 +97,11 @@ const InvoicesPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [token, toast]);
 
   useEffect(() => {
     fetchData();
-  }, [token]);
+  }, [fetchData]);
 
   const handleOpenModal = (invoice = null) => {
     setSelectedInvoice(invoice);

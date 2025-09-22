@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Heading,
@@ -15,7 +15,6 @@ import {
   ListItem,
   ListIcon,
   CardHeader,
-  Button,
   Flex,
   Spacer,
   IconButton,
@@ -36,14 +35,13 @@ import {
   FaUserCircle,
   FaFileInvoiceDollar,
 } from 'react-icons/fa';
-import { Line, Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
   Legend,
@@ -55,7 +53,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
   Legend,
@@ -120,7 +117,7 @@ function Dashboard() {
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/dashboard', {
         headers: {
@@ -143,11 +140,11 @@ function Dashboard() {
       });
       setIsLoading(false);
     }
-  };
+  }, [token, toast]);
 
   useEffect(() => {
     fetchData();
-  }, [token, toast]);
+  }, [fetchData]);
 
   const chartData = {
     labels: summary?.chartData.labels,

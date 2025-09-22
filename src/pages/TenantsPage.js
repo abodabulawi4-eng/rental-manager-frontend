@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Heading,
@@ -65,23 +65,11 @@ function TenantsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTenants, setFilteredTenants] = useState([]);
 
-  useEffect(() => {
-    fetchTenants();
-    fetchProperties();
-  }, []);
-  
-  useEffect(() => {
-    const results = tenants.filter(tenant =>
-      tenant.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredTenants(results);
-  }, [searchTerm, tenants]);
-
-  const showToast = (title, description, status) => {
+  const showToast = useCallback((title, description, status) => {
     toast({ title, description, status, duration: 5000, isClosable: true });
-  };
+  }, [toast]);
 
-  const fetchTenants = async () => {
+  const fetchTenants = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/tenants', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -91,9 +79,9 @@ function TenantsPage() {
     } catch (error) {
       showToast('Error', 'Failed to fetch tenants.', 'error');
     }
-  };
+  }, [token, showToast]);
 
-  const fetchProperties = async () => {
+  const fetchProperties = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/properties', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -103,7 +91,19 @@ function TenantsPage() {
     } catch (error) {
       showToast('Error', 'Failed to fetch properties.', 'error');
     }
-  };
+  }, [token, showToast]);
+
+  useEffect(() => {
+    fetchTenants();
+    fetchProperties();
+  }, [fetchTenants, fetchProperties]);
+  
+  useEffect(() => {
+    const results = tenants.filter(tenant =>
+      tenant.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredTenants(results);
+  }, [searchTerm, tenants]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;

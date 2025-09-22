@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Heading,
@@ -23,7 +23,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select,
   useToast,
   IconButton,
   Tooltip,
@@ -46,7 +45,7 @@ const ExpensesPage = () => {
     category: '',
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch('http://localhost:5000/expenses', {
@@ -65,11 +64,11 @@ const ExpensesPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [token, toast]);
 
   useEffect(() => {
     fetchData();
-  }, [token]);
+  }, [fetchData]);
 
   const handleOpenModal = (expense = null) => {
     setSelectedExpense(expense);
