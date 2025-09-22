@@ -14,6 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +27,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +38,7 @@ const LoginPage = () => {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
-        localStorage.setItem('isAdmin', data.isAdmin); // ** هذا السطر تم إضافته أو تعديله **
+        localStorage.setItem('isAdmin', data.isAdmin);
         toast({
           title: 'Login successful.',
           description: 'Redirecting to dashboard.',
@@ -44,7 +46,7 @@ const LoginPage = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate('/'); // يتم توجيه جميع المستخدمين إلى المسار الرئيسي
+        navigate('/');
       } else {
         const errorData = await response.json();
         if (response.status === 403) {
