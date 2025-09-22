@@ -15,6 +15,7 @@ import {
   ListItem,
   ListIcon,
   CardHeader,
+  Button,
   Flex,
   Spacer,
   IconButton,
@@ -144,9 +145,9 @@ function Dashboard() {
     }
   };
 
- useEffect(() => {
-  fetchData();
-}, [token, toast, fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [token, toast]);
 
   const chartData = {
     labels: summary?.chartData.labels,
