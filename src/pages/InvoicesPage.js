@@ -39,13 +39,11 @@ import {
 } from 'react-icons/fa';
 import ReceiptModal from '../components/ReceiptModal';
 
-// تمت إضافة هذا السطر الجديد
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const InvoicesPage = () => {
   const [invoices, setInvoices] = useState([]);
   const [tenants, setTenants] = useState([]);
-  const [properties, setProperties] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -88,7 +86,6 @@ const InvoicesPage = () => {
 
       setInvoices(enrichedInvoices);
       setTenants(tenantsData);
-      setProperties(propertiesData);
     } catch (error) {
       toast({
         title: 'Error',
@@ -393,7 +390,7 @@ const InvoicesPage = () => {
       <ReceiptModal
         isOpen={isReceiptModalOpen}
         onClose={onReceiptModalClose}
-        invoice={selectedInvoice}
+        receipt={selectedInvoice}
       />
     </Box>
   );

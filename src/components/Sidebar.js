@@ -45,8 +45,6 @@ const NavItem = ({ icon, children, to }) => {
 
 const Sidebar = ({ children }) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const bg = useColorModeValue('white', 'gray.900');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -68,9 +66,9 @@ const Sidebar = ({ children }) => {
         as="aside"
         w={{ base: '70px', md: '250px' }}
         p={4}
-        bg="background"
+        bg={useColorModeValue('white', 'gray.900')} // استخدام مباشر للمتغير
         borderRight="1px"
-        borderColor="gray.700"
+        borderColor={useColorModeValue('gray.200', 'gray.700')} // استخدام مباشر للمتغير
         boxShadow="md"
       >
         <VStack spacing={8} align="stretch" h="100%">
